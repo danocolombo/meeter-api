@@ -21,14 +21,23 @@ class Group {
     }
     
     // get the groups
-    public function getAll(){
-        // create query
-        $query = 'SELECT * FROM groups ORDER BY ID DESC';
+    function getAll(){
+        $query = 'SELECT 
+            ID as id, MtgID as mtgId, Gender as gender, Title as title, FacID as facId, CoFacID as coFacId, Attendance as coFacId, Location as location, Notes as notes
+             FROM groups ORDER BY id';
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
     }
     
+    function getMtgGroups($mtgId){
+        $query = 'SELECT
+            ID as id, MtgID as mtgId, Gender as gender, Title as title, FacID as facId, CoFacID as coFacId, Attendance as coFacId, Location as location, Notes as notes
+             FROM groups WHERE mtgId = ' . $mtgId . ' ORDER BY id';
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
     
     
     

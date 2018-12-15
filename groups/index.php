@@ -10,12 +10,17 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 include_once '../config/Database.php';
-include once './Group.php';
+include_once 'Group.php';
 
-private $client;
-if($_SERVER['REQUEST_METHOD'] == "GET"){
-    $this-client = "UAT";
-    handleGet();
+
+if($_SERVER['REQUEST_METHOD'] == "GET"){   
+    $client = $_GET["client"];
+    $mtgId = $_GET["MID"];
+    if(strlen($mtgId>0)){
+        returnGroupsForMeeting($client, $mtgId);
+    }else{
+        handleGet($client);
+    }
     
 } else if ($_SERVER['REQUEST_METHOD"'] == "POST"){
     echo "POST not implemented yet";
@@ -24,10 +29,49 @@ if($_SERVER['REQUEST_METHOD'] == "GET"){
     http_response_code(405);
 }
 
-private function handleGet(){
+function returnGroupsForMeeting($client, $mtgId){
     //instantiate and connect to database
     $database = new Database();
-    $db = $database->connect($this->client);
+    $db = $database->connect($client);
+    
+    $group = new Group($db);
+    
+    $result = $group->getMtgGroups($mtgId);
+    // get row count
+    $num = $result->rowCount();
+    
+    // check if Groups exist
+    if ($num>0){
+        // there are groups found, make array to hold data
+        $groups_arr = array();
+        $groups_arr['data'] = array();
+        while($row=$result->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $group_item = array(
+                'ID' => $id,
+                'MtgID' => $mtgId,
+                'Gender' => $gender,
+                'Title' => $title,
+                'FacID' => $facId,
+                'CoFacID' => $coFacId,
+                'Attendance' => $attendance,
+                'Location' => $location,
+                'Notes' => html_entity_decode($notes)
+            );
+            //             array_push($groups_arr, $group_item);
+            array_push($groups_arr['data'], $group_item);
+        }
+        // Push to "data"
+        echo json_encode($groups_arr);
+    }else{
+        echo  json_encode(array('message' => 'No Groups found'));
+    }
+}
+
+function handleGet($client){
+    //instantiate and connect to database
+    $database = new Database();
+    $db = $database->connect($client);
     
     $group = new Group($db);
     
@@ -40,25 +84,23 @@ private function handleGet(){
         // there are groups found, make array to hold data
         $groups_arr = array();
         $groups_arr['data'] = array();
-        while($row=$resut->fetch(PDO::FETCH_ASSOC)){
+        while($row=$result->fetch(PDO::FETCH_ASSOC)){
             extract($row);
             $group_item = array(
-                'id' => $id;
-                'mtgId' => $mtgId;
-                'gender' => $gender;
-                'title' => $title;
-                'facId' => $facId;
-                'coFacId' => $coFacId;
-                'attendance' => $attendance;
-                'location' => $location;
-                'notes' => html_entity_decode($notes);
-                
+                'ID' => $id,
+                'MtgID' => $mtgId,
+                'Gender' => $gender,
+                'Title' => $title,
+                'FacID' => $facId,
+                'CoFacID' => $coFacId,
+                'Attendance' => $attendance,
+                'Location' => $location,
+                'Notes' => html_entity_decode($notes)
             );
-            array_push($groups_arr, $group_item);
+//             array_push($groups_arr, $group_item);
+            array_push($groups_arr['data'], $group_item);
         }
         // Push to "data"
-        //array_push($posts_arr, $post_item);
-        // array_push($posts_arr['data'], $post_item);
         echo json_encode($groups_arr);
     }else{
         echo  json_encode(array('message' => 'No Groups found'));

@@ -19,10 +19,9 @@ class Database
     private $conn;
 
     // DB Connect
-    public function connect($client)
+    function connect($client)
     {
         $this->conn = null;
-        $this->db_name = $client;
         switch($client){
             case "CCC":
                 $this->db_name = "dcolombo_ccc";
