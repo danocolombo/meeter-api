@@ -64,7 +64,13 @@ function returnGroupsForMeeting($client, $mtgId){
         // Push to "data"
         echo json_encode($groups_arr);
     }else{
-        echo  json_encode(array('message' => 'No Groups found'));
+        $groups_arr = array();
+        $groups_arr['data'] = array();
+        $group_item = array('message' => 'no groups information for meeting');
+        array_push($groups_arr['data'], $group_item);
+        
+        // Push to "data"
+        echo json_encode($groups_arr);
     }
 }
 
@@ -103,7 +109,12 @@ function handleGet($client){
         // Push to "data"
         echo json_encode($groups_arr);
     }else{
-        echo  json_encode(array('message' => 'No Groups found'));
+        $groups_arr = array();
+        $groups_arr['data'] = array();
+        $group_item = array('message' => 'No GROUPS defined');
+        array_push($gouops_arr['data'], $group_item);
+        
+        echo  json_encode($groups_arr);
     }
 }
 
