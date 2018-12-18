@@ -38,6 +38,14 @@ class Group {
         $stmt->execute();
         return $stmt;
     }
+    function getGroupById($gID){
+        $query = 'SELECT
+            ID as id, MtgID as mtgId, Gender as gender, Title as title, FacID as facId, CoFacID as coFacId, Attendance as coFacId, Location as location, Notes as notes
+             FROM groups WHERE id = ' . $gID;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
+    }
     
     
     
