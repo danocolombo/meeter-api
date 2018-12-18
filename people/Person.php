@@ -21,7 +21,7 @@ class Person
     public $id;
     public $active;
     public $address;
-    public #aos;
+    public $aos;
     public $areasServed;
     public $city;
     public $covenant;
@@ -72,7 +72,7 @@ class Person
             RecoverySince as recoverySince,
             SpiritualGifts as spiritualGifts,
             State as state,
-            Zipcode as zipcode';
+            Zipcode as zipcode from people';
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -103,7 +103,7 @@ class Person
             SpiritualGifts as spiritualGifts,
             State as state,
             Zipcode as zipcode 
-            FROM people WHERE id = ' . $pid . ' ORDER BY id';
+            FROM people WHERE id = ' . $pid;
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
