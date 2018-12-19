@@ -86,13 +86,15 @@ function returnGroupsForMtgForm($client, $mtgId){
         // Push to "data"
         echo json_encode($groups_arr);
     }else{
-        $groups_arr = array();
-        $groups_arr['data'] = array();
-        $group_item = array('message' => 'no group information for meeting');
-        array_push($groups_arr['data'], $group_item);
+//         $groups_arr = array();
+//         $groups_arr['data'] = array();
+//         $group_item = array('message' => 'no group information for meeting');
+//         array_push($groups_arr['data'], $group_item);
         
-        // Push to "data"
-        echo json_encode($groups_arr);
+//         // Push to "data"
+//         echo json_encode($groups_arr);
+        http_response_code(204);
+        return;
     }
     
 }
