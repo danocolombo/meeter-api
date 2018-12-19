@@ -46,10 +46,10 @@ class Group {
         $stmt->execute();
         return $stmt;
     }
-    function getGroupListingForMtgForm($mtgId){
+    function getGroupsForMtgForm($mtgId){
         
         $query = 'SELECT groups.ID as id, groups.Gender as gender, groups.Title as title, fac.FName as fFName, fac.LName as fLName, cofac.FName as cFName, cofac.LName as cLName,
-        groups.Location, groups.Attendance
+        groups.Location as location, groups.Attendance as attendance
         FROM groups INNER JOIN people fac ON groups.FacID = fac.ID
         INNER JOIN people cofac ON groups.CoFacID = cofac.ID
         WHERE groups.MtgID = ' . $mtgId . ' ORDER BY groups.Gender, groups.Title DESC';
