@@ -45,6 +45,6 @@ if ($num>0){
     echo json_encode($groups_arr);
 }else{
     http_response_code(404);
-    echo json_endode(array("message" => "No groups defined for meeting."));
+    echo json_encode(array("message" => "No groups defined for meeting."));
 }
 
