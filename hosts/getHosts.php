@@ -8,7 +8,7 @@ include_once '../config/Database.php';
 include_once '../people/Person.php';
 include_once 'Host.php';
 $host = 'localhost';
-$db_name = 'muat';
+$db_name = 'dcolombo_muat';
 $username = 'dcolombo_mapi';
 $password = 'MR0mans1212!';
 $conn;
@@ -24,7 +24,7 @@ $client = $_GET["client"];
 
 // $person = new Person($db);
 $hosts = new Host();
-$hostIDs_arr = array();
+$hostIDs_arr[Host] = array();
 $dbHostSet = "HostSet";
 
 // $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -40,8 +40,8 @@ if (mysqli_connect_errno()){
 }
 
 
-$stmt = $dbcon->prepare("SELECT Setting From Meeter WHERE Config = ?");
-$stmt->bind_param("s", $dbHostSet);
+$stmt = $dbcon->prepare("SELECT ID, Config, Version, Setting From Meeter WHERE Config = \"HostSet\"");
+// $stmt->bind_param("s", $dbHostSet);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0){
@@ -53,31 +53,44 @@ if ($stmt->num_rows > 0){
     $stmt->close();
 }
 // $ref should contain IDs seperated by "|" value.
+echo "dbhostSet: $dbhostSet<br/>";
 $hostIDs_arr = explode("|", $dbHostSet);
+for($x=0;$x<$hostIDs_arr.length;$x++){
+    echo "$x. $hostIDs_arr[$x]<br/>";
+}
+echo "done";
+exit();
 //now get all the people that are active
+$one = 1;
 $stmt = $dbcon->prepare("SELECT ID, FName, Lname From people WHERE Active = ?");
-$stmt->bind_param("i", 1);
+$stmt->bind_param("i", $one);
 $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0){
+    // there are groups found, make array to hold data
+    $hosts_arr = array();
+    $hosts_arr['data'] = array();
     //active person
     $stmt->bind_result($ID, $FName, $LName);
     while($stmt->fetch()){
-        if(array_search($ID, $hostIDs_arr)){
-            array_push($hosts, $ID, $FName, $LName);
-        }
+//         if(array_search($ID, $hostIDs_arr)){
+            $host_item = array(
+                'ID' => $id,
+                'MtgID' => $ID,
+                'FName' => $FName,
+                'LName' => $LName
+            );
+            //             array_push($groups_arr, $group_item);
+            array_push($hosts_arr['data'], $host_item);
+//         }
     }
-    $stmt->free_result();
     $stmt->close();
+    $dbcon->close();
+    // Push to "data"
+    http_response_code(200);
+    echo json_encode($groups_arr);
+}else{
+    http_response_code(404);
+    echo json_endode(array("message" => "No hosts defined in system."));
 }
-connnection.close();
-//now $hosts should have the people that can host from the config entry in the database
-for( $j=0;$j<$hosts.length();$j++){
-    echo "$hosts[$j].ID $hosts[$j].LName, $hosts[$j].FName<br/>";
-}
-
-// $hosts should now hold the id, fname and lname of all the hosts identified in the database
-// Push to "data"
-// http_response_code(200);
-// echo json_encode($hosts);
 
