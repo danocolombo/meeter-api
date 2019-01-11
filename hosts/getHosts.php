@@ -19,7 +19,7 @@ if($result->num_rows > 0){
     }
 }
 
-// $ref should contain IDs seperated by "|" value.
+// $dbHostSet should contain IDs seperated by "|" value.
 $hostIDs_arr = explode("|", $dbHostSet);
 
 //now get all the people to match the configuration values
@@ -29,7 +29,7 @@ $sql = "SELECT ID, FName, LName FROM people WHERE Active = 1 AND length(LName)>0
 $result = $db->query($sql);
 if($result->num_rows > 0){
     while($row = $result->fetch_assoc()){
-        if(array_search($row["ID"], $hostIDs_arr)){
+        if(in_array($row["ID"], $hostIDs_arr)){
             // they are a host
             $host_item = array(
                 'ID' => $row["ID"],
